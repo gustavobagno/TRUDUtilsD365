@@ -253,7 +253,28 @@ Another option (this will run a new instance of VS)
 
 ## Installation
 
+### Recommended: one-line install (`Install.ps1`)
+
+`Install.ps1` finds **every** Visual Studio instance that has the Dynamics 365 F&O development tools — regardless of version (2019 / 2022 / 2026), edition or install drive — and installs the add-in into all of them. It does **not** require the `DynamicsVSTools` environment variable and self-elevates when needed.
+
+```powershell
+# Latest release, into every VS instance that has the D365 dev tools
+$repo = "TrudAX/TRUDUtilsD365"
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$script = Join-Path $env:TEMP "Install-TRUDUtilsD365.ps1"
+Invoke-WebRequest "https://raw.githubusercontent.com/$repo/master/Install.ps1" -OutFile $script -UseBasicParsing
+powershell -NoProfile -ExecutionPolicy Bypass -File $script
+```
+
+Useful switches:
+
+* `-ListOnly` — just print the folders it would install into (read-only, no elevation).
+* `-Dev` — install the latest development build from `master` instead of the tagged release.
+* `-Source <folder>` — install a local build (e.g. `-Source .\TRUDUtilsD365\bin\Debug`); nothing is downloaded.
+
 ### Using Power Shell
+
+> `InstallToVS.exe` now auto-detects **all** installed Visual Studio versions (via `vswhere`, a filesystem scan and the `dynamics://` registry handler) and installs into every one that has the D365 dev tools — the `DynamicsVSTools` variable is no longer required.
 
 Latest dev version:
 
